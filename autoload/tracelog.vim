@@ -283,7 +283,7 @@ endfun
 
 "Export {
 
-fun! tracelog#Traceadd()
+fun! tracelog#TraceAdd()
     call s:TraceAdd()
 endfun
 
