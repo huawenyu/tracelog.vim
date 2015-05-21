@@ -5,6 +5,14 @@
 " Notes:       Should have a dir to hold the file name's list of the processing
 " ============================================================================
 
+"Implementation {
+
+fun! s:PrepareFile(file)
+    exec ":silent e " . a:file
+    exec ":silent g/^\_s$/normal dd"
+    exec ":silent g/(/normal f(d$"
+endfun
+
 " precondition: cursor stop at begin brace
 " auto insert _WAD_TRACE_; into function's enter
 fun! s:InsertTraceLine()
@@ -225,24 +233,40 @@ fun! s:InsertTraceAll(action)
 
     exec ":wa"
     "exec ":qa"
-    echo "Traceadd() Finish!"
-    echo "Cont. :call s:Traceadjust() after gen cscope and ctags index"
+    echo "TraceAdd() Finish!"
+    echo "Cont. :TraceAdjust() after gen cscope and ctags index"
 endfun
 
+fun! s:LogClearLines()
+    let l:file = g:tracelog_default_dir . "logclear"
 
+    if filereadable(l:file)
+        call s:PrepareFile(l:file)
 
+        for line in range(line("1"),line("$"))
+            if !empty(getline(line))
+                let stringcmd = ":g/" . getline(line) . "/normal dd"
+                "echom stringcmd
+                exec stringcmd
+                exec ":silent b " . l:file
+            endif
+        endfor
 
+    endif
+endfun
+
+"}
 
 "Misc {
 
-fun! s:Traceadd()
+fun! s:TraceAdd()
     call s:InsertTraceAll("add")
 endfun
 " Have you cscope first?
-fun! s:Traceadjust()
+fun! s:TraceAdjust()
     call s:InsertTraceAll("adjust")
 endfun
-fun! s:Tracedel()
+fun! s:TraceClear()
     call s:InsertTraceAll("clear")
 endfun
 
@@ -252,15 +276,19 @@ endfun
 "Export {
 
 fun! tracelog#Traceadd()
-    call s:Traceadd()
+    call s:TraceAdd()
 endfun
 
-fun! tracelog#Traceadjust()
-    call s:Traceadjust()
+fun! tracelog#TraceAdjust()
+    call s:TraceAdjust()
 endfun
 
-fun! tracelog#Tracedel()
-    call s:Tracedel()
+fun! tracelog#TraceClear()
+    call s:TraceClear()
+endfun
+
+fun! tracelog#TraceLogClear()
+    call s:LogClearLines()
 endfun
 
 "}

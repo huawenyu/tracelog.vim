@@ -26,7 +26,8 @@ let g:loaded_tracelog = 1
 "}
 
 "Misc {
-command! -nargs=0 Traceadd call tracelog#Traceadd()
-command! -nargs=0 Traceadjust call tracelog#Traceadjust()
-command! -nargs=0 Tracedel call tracelog#Tracedel()
+command! -nargs=0 TraceAdd call tracelog#TraceAdd()
+command! -nargs=0 TraceAdjust call tracelog#TraceAdjust()
+command! -nargs=0 TraceClear call tracelog#TraceClear()
+command! -nargs=0 TraceLogClear call tracelog#TraceLogClear()
 "}
