@@ -49,8 +49,8 @@ endfun
 fun! s:InsertTraceAll(action)
     " adjust(clear) specific function
     if a:action == "adjust"
-        if filereadable($HOME . "/script/trace.func.del")
-            exec ":silent e ~/script/trace.func.del"
+        if filereadable(g:tracelog_default_dir . "trace.func.del")
+            exec ":silent e " . g:tracelog_default_dir . "trace.func.del"
             exec ":silent g/^\_s$/normal dd"
             exec ":silent g/(/normal f(d$"
             for line in range(line("1"),line("$"))
@@ -61,13 +61,13 @@ fun! s:InsertTraceAll(action)
                     if search('\s_WAD_TRACE_', 'c', (line(".")+4)) > 0
                         exec ":silent .g/_WAD_TRACE_/norm I//"
                     endif
-                    exec ":silent b ~/script/trace.func.del"
+                    exec ":silent b " . g:tracelog_default_dir . "trace.func.del"
                 endif
             endfor
         endif
 
-        if filereadable($HOME . "/script/trace.func.add")
-            exec ":silent e ~/script/trace.func.add"
+        if filereadable(g:tracelog_default_dir . "trace.func.add")
+            exec ":silent e " . g:tracelog_default_dir . "trace.func.add"
             exec ":silent g/^\_s$/normal dd"
             exec ":silent g/(/normal f(d$"
             for line in range(line("1"),line("$"))
@@ -84,7 +84,7 @@ fun! s:InsertTraceAll(action)
                         call s:InsertTraceLine()
                     endif
 
-                    exec ":silent b ~/script/trace.func.add"
+                    exec ":silent b " . g:tracelog_default_dir . "trace.func.add"
                 endif
             endfor
         endif
@@ -106,8 +106,8 @@ fun! s:InsertTraceAll(action)
     endif
 
     " check process file list exist
-    if !filereadable($HOME . "/script/trace.files")
-        echo $HOME . "/script/trace.files not exists"
+    if !filereadable(g:tracelog_default_dir . "trace.files")
+        echo g:tracelog_default_dir . "trace.files not exists"
         return
     endif
 
@@ -152,7 +152,7 @@ fun! s:InsertTraceAll(action)
         endif
         if search("wad_trace_backtrace_init", 'n') == 0
             exec "/^\s*$"
-            exec "r! cat ~/script/trace.macro.def"
+            exec "r! cat " . g:tracelog_default_dir . "trace.macro.def"
         endif
     endif
 
@@ -169,13 +169,13 @@ fun! s:InsertTraceAll(action)
     else
         if search("wad_trace_backtrace_init", 'n') == 0
             exec ":normal G"
-            exec "r! cat ~/script/trace.macro.imp"
+            exec "r! cat " . g:tracelog_default_dir . "trace.macro.imp"
         endif
     endif
 
     " insert trace log
     " avoid dead loop
-    exec ":silent e ~/script/trace.files"
+    exec ":silent e " . g:tracelog_default_dir . "trace.files"
     exec ":silent g/wad_debug_impl/normal dd"
     exec ":silent g/wad_ui.c/normal dd"
     exec ":silent g/^\_s$/normal dd"
@@ -188,13 +188,13 @@ fun! s:InsertTraceAll(action)
             else
                 call s:InsertTraceFile()
             endif
-            exec ":silent b ~/script/trace.files"
+            exec ":silent b " . g:tracelog_default_dir . "trace.files"
         endif
     endfor
 
     if a:action == "clear"
-        if filereadable($HOME . "/script/trace.func.add")
-            exec ":silent e ~/script/trace.func.add"
+        if filereadable(g:tracelog_default_dir . "trace.func.add")
+            exec ":silent e " . g:tracelog_default_dir . "trace.func.add"
             exec ":silent g/^\_s$/normal dd"
             exec ":silent g/(/normal f(d$"
             for line in range(line("1"),line("$"))
@@ -205,7 +205,7 @@ fun! s:InsertTraceAll(action)
                     if search('\s_WAD_TRACE_', 'c', (line(".")+3)) > 0
                         exec ":silent .g/_WAD_TRACE_/norm dd"
                     endif
-                    exec ":silent b ~/script/trace.func.add"
+                    exec ":silent b " . g:tracelog_default_dir . "trace.func.add"
                 endif
             endfor
         endif
