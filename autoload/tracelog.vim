@@ -242,15 +242,16 @@ fun! s:LogClearLines()
 
     if filereadable(l:file)
         let l:bufname = expand('%:p')
+        echom l:bufname
 
         call s:PrepareFile(l:file)
         for line in range(line("1"),line("$"))
             if !empty(getline(line))
-                let stringcmd = ":g/" . getline(line) . "/normal dd"
-                "echom stringcmd
+                let l:stringcmd = ":g/" . getline(line) . "/normal dd"
 
                 exec ":silent b " . l:bufname
-                exec stringcmd
+                echom l:stringcmd
+                exec l:stringcmd
                 exec ":silent b " . l:file
             endif
         endfor
