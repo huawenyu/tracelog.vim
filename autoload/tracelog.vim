@@ -7,7 +7,7 @@
 
 " precondition: cursor stop at begin brace
 " auto insert _WAD_TRACE_; into function's enter
-fun! InsertTraceLine()
+fun! s:InsertTraceLine()
     let stringtrace = ":normal o\<TAB>_WAD_TRACE_;\<ESC>"
     if search('\<_WAD_TRACE_', 'pnc', (line(".")+2)) == 0
         exec stringtrace
@@ -35,11 +35,11 @@ fun! s:InsertTraceFile()
             if search('\(}.*,\)\|\(}.*;\)', 'pnc', line(".")) > 0
                 exec ":normal %"
                 if search('\<inline\>', 'pnbc', (line(".")-1)) > 0
-                    call InsertTraceLine()
+                    call s:InsertTraceLine()
                 endif
             else
                 exec ":normal %"
-                call InsertTraceLine()
+                call s:InsertTraceLine()
             endif
         endif
         exec ":normal ]]"
@@ -81,7 +81,7 @@ fun! s:InsertTraceAll(action)
 
                     exec stringcmd
                     if search('^{', 'c', (line(".")+2)) > 0
-                        call InsertTraceLine()
+                        call s:InsertTraceLine()
                     endif
 
                     exec ":silent b ~/script/trace.func.add"
@@ -95,7 +95,7 @@ fun! s:InsertTraceAll(action)
             exec ":silent normal gg"
             if search('\swad_memtrack_free') > 0
                 exec ":silent normal ]]"
-                call InsertTraceMsg("memset(ptr, 0, size);")
+                call s:InsertTraceMsg("memset(ptr, 0, size);")
             endif
         endif
 
@@ -186,7 +186,7 @@ fun! s:InsertTraceAll(action)
             if a:action == "clear"
                 exec ":silent g/_WAD_TRACE_/norm dd"
             else
-                call InsertTraceFile()
+                call s:InsertTraceFile()
             endif
             exec ":silent b ~/script/trace.files"
         endif
@@ -210,7 +210,7 @@ fun! s:InsertTraceAll(action)
             endfor
         endif
 
-        "remove: call InsertTraceMsg("memset(ptr, 0, size);")
+        "remove: call s:InsertTraceMsg("memset(ptr, 0, size);")
         if filereadable("daemon/wad/wad_memtrack.c")
             exec ":silent e daemon/wad/wad_memtrack.c"
             exec ":silent normal gg"
@@ -226,7 +226,7 @@ fun! s:InsertTraceAll(action)
     exec ":wa"
     "exec ":qa"
     echo "Traceadd() Finish!"
-    echo "Cont. :call Traceadjust() after gen cscope and ctags index"
+    echo "Cont. :call s:Traceadjust() after gen cscope and ctags index"
 endfun
 
 
