@@ -1,6 +1,36 @@
 # tracelog.vim
 use vim adding trace log to the source code
-REF
+
+# QuickStart
+Assume we now locate our source top dir.
+
+## prepare config files
+We should have a dir to hold all these files, here it's `$HOME/script/trace-wad/`:
+  - files         file path list, oneline one file which are the list of all need trace file
+  - func-add      function name list, oneline one function, some special function should trace but maybe dinfinition in header file
+  - func-comment  function name list, oneline one function, some special function should not trace because too many called
+  - logclear      remove some log line, the post process of our output log, some repeated and too verbose log we donnot need at all
+  - macro-def     the trace macro
+  - macro-imp     the trace macro implement
+
+## tell tracelog.vim the path
+Add the follow line to your vimrc:  
+`let g:tracelog_default_dir = $HOME . "/script/trace-wad/"`
+
+## start auto insert trace
+  1. back to your source top dir, then enter vim environment: $ vi .
+  2. :TraceAdd
+    - insert TRACE to all function according to `files`
+  3. $ cscope -Rkbq . ; ctags -R .
+    - gen tags to process func-add, func-comment
+  4. :TraceAdjust
+    - add trace to special function according to `func-add`
+    - comment trace to special function according to `func-comment`
+  5. $ ./test > log.output
+    - generate trace log
+  6. $ vi log.output
+    - :TraceLogClear
+    - clear some too verbose log according to `logclear`
 
 # Appendix
 ## ref
