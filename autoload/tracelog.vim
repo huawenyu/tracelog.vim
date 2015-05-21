@@ -241,12 +241,15 @@ fun! s:LogClearLines()
     let l:file = g:tracelog_default_dir . "logclear"
 
     if filereadable(l:file)
-        call s:PrepareFile(l:file)
+        let l:bufname = expand('%:p')
 
+        call s:PrepareFile(l:file)
         for line in range(line("1"),line("$"))
             if !empty(getline(line))
                 let stringcmd = ":g/" . getline(line) . "/normal dd"
                 "echom stringcmd
+
+                exec ":silent b " . l:bufname
                 exec stringcmd
                 exec ":silent b " . l:file
             endif
