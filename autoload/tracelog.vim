@@ -10,23 +10,22 @@
 fun! s:PrepareFile(file)
     exec ":silent e " . a:file
     exec ":silent g/^\_s$/normal dd"
-    exec ":silent g/(/normal f(d$"
 endfun
 
 " precondition: cursor stop at begin brace
-" auto insert _WAD_TRACE_; into function's enter
+" auto insert _WAD_TRACE_; into function's entry
 fun! s:InsertTraceLine()
-    let stringtrace = ":normal o\<TAB>_WAD_TRACE_;\<ESC>"
+    let l:stringtrace = ":normal o\<TAB>_WAD_TRACE_;\<ESC>"
     if search('\<_WAD_TRACE_', 'pnc', (line(".")+2)) == 0
-        exec stringtrace
+        exec l:stringtrace
     endif
 endfun
 
 " precondition: cursor stop at begin brace
 fun! s:InsertTraceMsg(msg)
-    let stringtrace = ":normal o\<TAB>" . a:msg . "\<ESC>"
+    let l:stringtrace = ":normal o\<TAB>" . a:msg . "\<ESC>"
     if search(a:msg, 'pnc', (line(".")+2)) == 0
-        exec stringtrace
+        exec l:stringtrace
     endif
 endfun
 
@@ -57,10 +56,11 @@ endfun
 fun! s:InsertTraceAll(action)
     " adjust(clear) specific function
     if a:action == "adjust"
-        if filereadable(g:tracelog_default_dir . "func-comment")
-            exec ":silent e " . g:tracelog_default_dir . "func-comment"
-            exec ":silent g/^\_s$/normal dd"
+        let l:file = g:tracelog_default_dir . "func-comment"
+        if filereadable(l:file)
+            call s:PrepareFile(l:file)
             exec ":silent g/(/normal f(d$"
+
             for line in range(line("1"),line("$"))
                 if !empty(getline(line))
                     let stringcmd = ":tjump " . getline(line)
@@ -69,15 +69,16 @@ fun! s:InsertTraceAll(action)
                     if search('\s_WAD_TRACE_', 'c', (line(".")+4)) > 0
                         exec ":silent .g/_WAD_TRACE_/norm I//"
                     endif
-                    exec ":silent b " . g:tracelog_default_dir . "func-comment"
+                    exec ":silent b " . l:file
                 endif
             endfor
         endif
 
-        if filereadable(g:tracelog_default_dir . "func-add")
-            exec ":silent e " . g:tracelog_default_dir . "func-add"
-            exec ":silent g/^\_s$/normal dd"
+        let l:file = g:tracelog_default_dir . "func-add"
+        if filereadable(l:file)
+            call s:PrepareFile(l:file)
             exec ":silent g/(/normal f(d$"
+
             for line in range(line("1"),line("$"))
                 if !empty(getline(line))
                     let stringcmd = ":cs f g " . getline(line)
@@ -92,7 +93,7 @@ fun! s:InsertTraceAll(action)
                         call s:InsertTraceLine()
                     endif
 
-                    exec ":silent b " . g:tracelog_default_dir . "func-add"
+                    exec ":silent b " . l:file
                 endif
             endfor
         endif
@@ -109,13 +110,14 @@ fun! s:InsertTraceAll(action)
 
         exec ":wa"
         "exec ":qa"
-        echo "Traceadjust() Finish!"
+        echo "TraceAdjust() Finish!"
         return
     endif
 
     " check process file list exist
-    if !filereadable(g:tracelog_default_dir . "files")
-        echo g:tracelog_default_dir . "files not exists"
+    let l:file = g:tracelog_default_dir . "files"
+    if !filereadable(l:file")
+        echo l:file . " not exists"
         return
     endif
 
@@ -183,10 +185,10 @@ fun! s:InsertTraceAll(action)
 
     " insert trace log
     " avoid dead loop
-    exec ":silent e " . g:tracelog_default_dir . "files"
+    let l:file = g:tracelog_default_dir . "files"
+    call s:PrepareFile(l:file)
     exec ":silent g/wad_debug_impl/normal dd"
     exec ":silent g/wad_ui.c/normal dd"
-    exec ":silent g/^\_s$/normal dd"
     for line in range(line("1"),line("$"))
         let stringfile = getline(line)
         if filewritable(stringfile)
@@ -196,15 +198,17 @@ fun! s:InsertTraceAll(action)
             else
                 call s:InsertTraceFile()
             endif
-            exec ":silent b " . g:tracelog_default_dir . "files"
+            exec ":silent b " . l:file
         endif
     endfor
 
     if a:action == "clear"
-        if filereadable(g:tracelog_default_dir . "func-add")
-            exec ":silent e " . g:tracelog_default_dir . "func-add"
-            exec ":silent g/^\_s$/normal dd"
+        let l:file = g:tracelog_default_dir . "func-add"
+
+        if filereadable(l:file)
+            call s:PrepareFile(l:file)
             exec ":silent g/(/normal f(d$"
+
             for line in range(line("1"),line("$"))
                 if !empty(getline(line))
                     let stringcmd = ":cs f g " . getline(line)
@@ -213,7 +217,7 @@ fun! s:InsertTraceAll(action)
                     if search('\s_WAD_TRACE_', 'c', (line(".")+3)) > 0
                         exec ":silent .g/_WAD_TRACE_/norm dd"
                     endif
-                    exec ":silent b " . g:tracelog_default_dir . "func-add"
+                    exec ":silent b " . l:file
                 endif
             endfor
         endif
@@ -242,7 +246,7 @@ fun! s:LogClearLines()
 
     if filereadable(l:file)
         let l:bufname = expand('%:p')
-        echom l:bufname
+        "echom l:bufname
 
         call s:PrepareFile(l:file)
         for line in range(line("1"),line("$"))
@@ -250,7 +254,7 @@ fun! s:LogClearLines()
                 let l:stringcmd = ":g/" . getline(line) . "/normal dd"
 
                 exec ":silent b " . l:bufname
-                echom l:stringcmd
+                "echom l:stringcmd
                 exec l:stringcmd
                 exec ":silent b " . l:file
             endif
