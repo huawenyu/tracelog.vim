@@ -10,7 +10,9 @@ if exists('g:loaded_tracelog') || &cp || v:version < 700
 endif
 
 if !exists('g:tracelog_default_dir')
-    echom 'Please define trace dir like: \nlet g:tracelog_default_dir = $HOME . "/script/wad/"'
+    echom 'Please define trace config dir:'
+    echom '    let g:tracelog_default_dir = $HOME . "/script/trace-wad/"'
+    echom 'And the dir have files "files, func-add, func-comment, macro-def, macro-imp" '
     finish
 endif
 
