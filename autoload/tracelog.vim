@@ -116,7 +116,7 @@ fun! s:InsertTraceAll(action)
 
     " check process file list exist
     let l:file = g:tracelog_default_dir . "files"
-    if !filereadable(l:file")
+    if !filereadable(l:file)
         echo l:file . " not exists"
         return
     endif
