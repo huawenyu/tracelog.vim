@@ -37,6 +37,7 @@ Add the follow line to your vimrc:
 http://learnvimscriptthehardway.stevelosh.com/  
 http://stevelosh.com/blog/2011/09/writing-vim-plugins/  
 http://andrewscala.com/vimscript/  
+http://note.axiaoxin.com/contents/vimscript-note.html  
 
 ## line wrap
 As in many other languages, statements can be wrapped using a \ character. Unlike in those languages, in Vim Script it must appear at the beginning of the succeeding line:
