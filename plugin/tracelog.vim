@@ -5,7 +5,11 @@
 
 
 "Init {
-if exists('g:loaded_tracelog') || &cp || v:version < 700
+if exists('g:loaded_tracelog')
+    finish
+endif
+
+if &cp || v:version < 700
     echom 'Please use the new vim version > 700'
     finish
 endif
