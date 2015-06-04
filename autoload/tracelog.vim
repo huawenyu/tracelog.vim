@@ -261,6 +261,7 @@ fun! s:LogClearLines()
         endfor
         
         exec ":silent b " . l:bufname
+        exec ":silent %s!\n\n\n\+!^M^M!g"
         exec ":wa"
         echo "TraceLogClear() OK!"
     endif
