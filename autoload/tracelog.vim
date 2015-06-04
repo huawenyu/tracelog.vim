@@ -251,7 +251,7 @@ fun! s:LogClearLines()
         call s:PrepareFile(l:file)
         for line in range(line("1"),line("$"))
             if !empty(getline(line))
-                let l:stringcmd = ":g/" . getline(line) . "/normal dd"
+                let l:stringcmd = ":silent g/" . getline(line) . "/normal dd"
 
                 exec ":silent b " . l:bufname
                 "echom l:stringcmd
@@ -259,7 +259,10 @@ fun! s:LogClearLines()
                 exec ":silent b " . l:file
             endif
         endfor
-
+        
+        exec ":silent b " . l:bufname
+        exec ":wa"
+        echo "TraceLogClear() OK!"
     endif
 endfun
 
