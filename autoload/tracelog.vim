@@ -259,12 +259,11 @@ fun! s:LogClearLines()
                 exec ":silent b " . l:file
             endif
         endfor
-        
-        exec ":silent b " . l:bufname
-        exec ":silent %s!\n\n\n\+!^M^M!g"
-        exec ":wa"
-        echo "TraceLogClear() OK!"
     endif
+    
+    exec ":silent b " . l:bufname
+    exec ':silent! %s/\(\n\n\)\n\+/\1/'
+
 endfun
 
 "}
